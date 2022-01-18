@@ -20,8 +20,10 @@ io.on('connection',function(socket)
 	socket.on('message',function(message) {
 		console.log('message received : ' + message.text);
 		
+		//send to everybody
+		io.emit('message',message);
 		//send to everybody not to sender
-		socket.broadcast.emit('message',message);
+		//socket.broadcast.emit('message',message);
 	});
 
 	socket.emit('message',{
