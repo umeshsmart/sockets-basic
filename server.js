@@ -14,7 +14,7 @@ app.use(express.static(__dirname + '/public'));
 //on listen event
 io.on('connection',function()
 {
-	console.log('User connection established via socket.io !!!!');
+	console.log('User connected via socket.io !!!!');
 });
 
 http.listen(PORT,function()
