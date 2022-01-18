@@ -11,18 +11,30 @@ var moment=require('moment');
 //use the folder as server
 app.use(express.static(__dirname + '/public'));
 
+var clientInfo={};
 //on listen event
 io.on('connection',function(socket)
 {
 	console.log('User connected via socket.io !!!!');
 
+	socket.on('joinRoom',function(req,res)
+	{
+		clientInfo[socket.id]=req;
+		socket.join(req.room);
+		socket.broadcast.to(req.room).emit('message',
+			{
+				name:'System',
+				text:req.name+' has joined room!!',
+				timestamp:moment().valueOf()
+			});
+	});
 	//listen
 	socket.on('message',function(message) {
 		console.log('message received : ' + message.text);
 		
 		//send to everybody
 		message.timestamp = moment().valueOf();
-		io.emit('message',message);
+		io.to(clientInfo[socket.id].room).emit('message',message);
 		//send to everybody not to sender
 		//socket.broadcast.emit('message',message);
 	});
